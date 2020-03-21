@@ -2,7 +2,7 @@ const autoprefixer = require('autoprefixer');
 const { WebpackWarPlugin } = require('webpack-war-plugin');
 
 module.exports = {
-    entry: ['./app.scss', './app.js'],
+    entry: ['./app.scss', './app.jsx'],
     output: {
       filename: 'bundle.js',
     },
@@ -10,12 +10,21 @@ module.exports = {
         new WebpackWarPlugin({
             archiveName: 'website',
             additionalElements: [
-                {path: 'index.html'}
+                {path: 'index.html'},
+                {path: 'WEB-INF'}
             ]
         }),
     ],
     module: {
       rules: [
+        {
+          test: /\.jsx$/,
+          exclude: /node_modules/,
+          loader: 'babel-loader',
+          query: {
+            presets: ['@babel/preset-env', '@babel/preset-react']
+          },
+        },
         {
           test: /\.scss$/,
           use: [
@@ -45,13 +54,6 @@ module.exports = {
             },
           ],
         },
-        {
-            test: /\.js$/,
-            loader: 'babel-loader',
-            query: {
-                presets: ['@babel/preset-env'],
-            },
-        }
       ],
     },
   };
